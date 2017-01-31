@@ -1,0 +1,5 @@
+if(this.x > 505){
+  this.x = 0;
+}
+else{
+this.x = this.x + 100 *dt;
