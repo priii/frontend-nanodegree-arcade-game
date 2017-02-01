@@ -39,10 +39,10 @@ Enemy.prototype.render = function() {
 
 };
 //passing speed aswell so that each bug move at different speed
-var enemy_1 = new Enemy(20,60,50);
-var enemy_2 = new Enemy(100, 225,300);
-var enemy_3 = new Enemy(80,140,150);
-var allEnemies = [enemy_1, enemy_2, enemy_3];
+var enemy_1 = new Enemy(20,140,50);
+var enemy_2 = new Enemy(100, 300,150);
+var enemy_3 = new Enemy(80,220,100);
+var allEnemies = [enemy_1,enemy_2,enemy_3];
 
 
 //Now write your own player class
@@ -55,33 +55,73 @@ var player = function(x,y) {
 };
 
 player.prototype.update = function() {
-    this.x = 200;
-    this.y = 400;
-
+   player.checkCollisions();
   };
 
 player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
+player.prototype.handleInput = function(keycode_val) {
+  var temp_x = 100; // temp_x value :width/ no of columns
+  var temp_y = 84; // temp_y value :height/ no of rows
+  switch (keycode_val) {
+     case 'left':
+     if(this.x - temp_x > 0){
+     this.x = this.x - temp_x ;
+   }
+    break;
+    case 'up':
+    if (this.y - temp_y > 0){
+    this.y = this.y - temp_y;
+  }
 
-player.prototype.handleInput = function (e) {
-  switch (e) {
-     case 37:
-     this.x = this.x - 10 ;
-     break;
-    case 38:
-    this.y = this.y - 10  ;
     break;
-    case 39:
-    this.x = this.x + 10;
+    case 'right':
+    if(this.x + temp_x < 500){
+    this.x = this.x + temp_x;
+  }
     break;
-    case 40:
-    this.y = this.y + 10 ;
+    case 'down':
+    if(this.y + temp_y < 550){
+    this.y = this.y + temp_y ;
+  }
+
   }
 };
 
-var player = new player();
+player.prototype.checkCollisions = function(){
+  var enemy_width = 101;
+  var enemy_height = 65;
+  var player_width = 102;
+  var player_height = 75;
+
+  for(var i = 0 ; i < allEnemies.length ; i++){
+  //for(var i = 0 ; i < 1 ; i++){
+    var e = allEnemies[i];
+    var ey2 = e.y;
+    var ey1 = ey2 + enemy_height;
+    var py2 = player.y;
+    var py1 = py2 + player_height;
+    var ex1 = e.x;
+    var ex2 = ex1 + enemy_width;
+    var px1 = player.x;
+    var px2 = px1 + player_width;
+    // keeping player's x,y axis and width and height  as a reference
+    // checking  bug's y axis and bug image's height comes inbetween player's y axis and player's height and the same for width and x axis
+    if( ( ( (ey2 < py1) && (ey2 > py2) ) || ( (ey1 < py1) && (ey1 > py2) ) ) &&
+        ( ( ( ex2 > px1)&& (ex2 < px2) ) || ( (ex1 > px1) && (ex1 < px2) ) ) ){
+       console.log("error")
+       alert("oop")
+       player.x = 210;
+       player.y = 470;
+     }
+   }
+ };
+
+
+var player = new player(210,470);
+
 
 
 
