@@ -67,7 +67,7 @@ player.prototype.handleInput = function(keycode_val) {
   var temp_y = 84; // temp_y value :height/ no of rows
   switch (keycode_val) {
      case 'left':
-     if(this.x - temp_x > 0){
+     if(this.x - temp_x > 0){// checking the key movement is inside the boundary or not.
      this.x = this.x - temp_x ;
    }
     break;
@@ -91,36 +91,56 @@ player.prototype.handleInput = function(keycode_val) {
 };
 
 player.prototype.checkCollisions = function(){
+  // height and width are from the bug and char boy's image
   var enemy_width = 101;
   var enemy_height = 65;
   var player_width = 102;
   var player_height = 75;
 
   for(var i = 0 ; i < allEnemies.length ; i++){
-  //for(var i = 0 ; i < 1 ; i++){
     var e = allEnemies[i];
+    var c = player_width/2; // for logical collision
     var ey2 = e.y;
     var ey1 = ey2 + enemy_height;
-    var py2 = player.y;
-    var py1 = py2 + player_height;
+    var py2 = player.y + c;
+    var py1 = py2 + player_height - c;
     var ex1 = e.x;
     var ex2 = ex1 + enemy_width;
-    var px1 = player.x;
-    var px2 = px1 + player_width;
+    var px1 = player.x + c;
+    var px2 = px1 + player_width - c;
     // keeping player's x,y axis and width and height  as a reference
     // checking  bug's y axis and bug image's height comes inbetween player's y axis and player's height and the same for width and x axis
     if( ( ( (ey2 < py1) && (ey2 > py2) ) || ( (ey1 < py1) && (ey1 > py2) ) ) &&
         ( ( ( ex2 > px1)&& (ex2 < px2) ) || ( (ex1 > px1) && (ex1 < px2) ) ) ){
        console.log("error")
-       alert("oop")
+       alert("you have got eaten by a bug! game over ! try again")
        player.x = 210;
        player.y = 470;
      }
    }
  };
-
-
 var player = new player(210,470);
+
+var Hearts = function(x,y){
+  this.x = x;
+  this.y = y;
+  this.sprite = 'images/Heart.png';
+};
+
+Hearts.prototype.update = function(){
+
+};
+
+Hearts.prototype.render = function(){
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+var heart_1 = new Hearts(200,400);
+Hearts.render();
+/*var heart_2 = new hearts(100,120);
+var heart_3 = new hearts(250,50);
+var allhearts = [heart_1,heart_2,heart_3];*/
+
 
 
 
