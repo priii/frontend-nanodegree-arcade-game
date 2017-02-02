@@ -94,7 +94,11 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
+        allhearts.forEach(function(heart){
+          heart.update();
+        });
         player.update();
+        girl.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -150,8 +154,11 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
+        allhearts.forEach(function(heart) {
+          heart.render();
+        });
         player.render();
+        girl.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -162,6 +169,12 @@ var Engine = (function(global) {
         // noop
     }
 
+  /*  function catchHearts(){
+      allhearts.forEach(function(heart){
+        heart.catchHearts();
+      });
+    }*/
+
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
@@ -171,6 +184,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
+        'images/Heart.png',
+        'images/char-princess-girl.png',
         'images/char-boy.png'
     ]);
     Resources.onReady(init);
