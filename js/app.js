@@ -48,22 +48,24 @@ var allEnemies = [enemy_1,enemy_2,enemy_3];
 //Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var player = function(x,y) {
+var Player = function(x,y) {
     this.x= x;
     this.y= y;
     this.sprite = 'images/char-boy.png';
 };
 
-player.prototype.update = function() {
+Player.prototype.update = function() {
    player.checkCollisions();
+   player.catchHearts();
+   player.heartWin();
 
   };
 
-player.prototype.render = function() {
+Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 
 };
-player.prototype.handleInput = function(keycode_val) {
+Player.prototype.handleInput = function(keycode_val) {
   var temp_x = 100; // temp_x value :width/ no of columns
   var temp_y = 84; // temp_y value :height/ no of rows (last row height is little bit bigger than the others that's y 84)
   switch (keycode_val) {
@@ -91,23 +93,22 @@ player.prototype.handleInput = function(keycode_val) {
   }
 };
 
-player.prototype.checkCollisions = function(){
+Player.prototype.checkCollisions = function(){
   // height and width are from the bug and char boy's image
   var enemy_width = 101;
   var enemy_height = 65;
   var player_width = 102;
   var player_height = 75;
-
   for(var i = 0 ; i < allEnemies.length ; i++){
     var e = allEnemies[i];
     var c = player_width/2; // for logical collision
     var ey2 = e.y;
     var ey1 = ey2 + enemy_height;
-    var py2 = player.y + c;
+    var py2 = this.y + c;
     var py1 = py2 + player_height - c;
     var ex1 = e.x;
     var ex2 = ex1 + enemy_width;
-    var px1 = player.x + c;
+    var px1 = this.x + c;
     var px2 = px1 + player_width - c;
     // keeping player's x,y axis and width and height  as a reference
     // checking  bug's y axis and bug image's height comes inbetween player's y axis and player's height and the same for width and x axis
@@ -115,13 +116,38 @@ player.prototype.checkCollisions = function(){
         ( ( ( ex2 > px1)&& (ex2 < px2) ) || ( (ex1 > px1) && (ex1 < px2) ) ) ){
        console.log("error")
        confirm("you have got eaten by a bug! game over ! try again press ok to continue")
-       player.x = 210;
-       player.y = 470;
-       Hearts.prototype.reset();
+       this.x = 210;
+       this.y = 470;
+       player.resetHearts();
      }
    }
  };
-var player = new player(210,470);
+
+
+
+ Player.prototype.catchHearts = function(){
+   for(var i = 0 ; i < allhearts.length ; i++){
+     allhearts[i].catchHearts();
+   }
+
+ };
+
+ // resting the heart randomly when the bug bites the player
+ Player.prototype.resetHearts = function(){
+    for(var i = 0 ; i < allhearts.length ; i++){
+      allhearts[i].resetHearts();
+    }
+ };
+
+ Player.prototype.heartWin = function(){
+    for(var i = 0 ; i < allhearts.length ; i++){
+      allhearts[i].heartWin();
+    }
+
+ };
+
+
+var player = new Player(210,470);
 
 // girl class
 
@@ -140,7 +166,9 @@ Girl.prototype.render = function(){
 
 };
 
+
 var girl = new Girl(400,45);
+
 // heart class(rule book)
 var Hearts = function(x,y){
   this.x = x;
@@ -149,7 +177,7 @@ var Hearts = function(x,y){
   };
 
 Hearts.prototype.update = function(){
-  Hearts.prototype.catchHearts();
+
 };
 
 Hearts.prototype.render = function(){
@@ -176,24 +204,47 @@ var px2 = px1 + player_width;
 if( ( ( (hy2 < py1) && (hy2 > py2) ) || ( (hy1 < py1) && (hy1 > py2) ) ) &&
     ( ( ( hx2 > px1)&& (hx2 < px2) ) || ( (hx1 > px1) && (hx1 < px2) ) ) ){
       h.x = 400;
-      h.y = 45;
+      h.y = 65;
     }
   }
 };
 
-// resting the heart randomly when the bug bites the player
-Hearts.prototype.reset = function(){
+Hearts.prototype.heartWin = function(){
+ if ( ( (heart_1.x == 400) && (heart_1.y == 65) ) &&
+    ( (heart_2.x == 400) && (heart_2.y == 65) ) &&
+    ( (heart_3.x == 400) && (heart_3.y == 65) ) &&
+    ( (heart_4.x == 400) && (heart_4.y == 65) ) &&
+    ( (heart_5.x == 400) && (heart_5.y == 65) ) ) {
+    console.log("won")
+    girl.x = 290;
+    girl.y = 400;
+    player.x = 210;
+    player.y = 470;
+  }
+};
+
+Hearts.prototype.resetHearts = function(){
   var heart_width = 48;
   var heart_height = 50;
-//  var heart_loc = array_init_fn(5,2); // calling my array function to save my heart locations
+
+  var heart_loc = array_init_fn(5,2); // calling my array function to save my heart locations
   for(var i = 0 ; i < allhearts.length ; i++){
   var h = allhearts[i];
+  h.x = 0;
+  h.y = 0;
   var ranx_heart = ((Math.random()*400 + 20));
   var rany_heart = ((Math.random()*170 + 150));
-  h.x =  ranx_heart;
-  h.y =  rany_heart;
+  h.x = ranx_heart;
+  h.y = rany_heart;
   //if((h.x > (h.x+ heart_width)) && (h.y > (h.y + heart_height))){
-  //heart_loc[i]= [h.x,h.y ];//heart_loc[i] points my index of 2 dimensional array  and stores the hearts locations
+  /*if(heart_loc[i] < 0){
+  heart_loc[i]= [h.x,h.y ];//heart_loc[i] points my index of 2 dimensional array  and stores the hearts locations
+  }
+  else
+    {
+      heart_loc[i] = [h.x +36,h.y+71];
+    }
+}*/
 }
 };
 
