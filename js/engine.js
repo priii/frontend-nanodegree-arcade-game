@@ -33,11 +33,10 @@ var Engine = (function(global) {
     var pause_button = doc.createElement("button");
     start_button.innerHTML = "Play";
     pause_button.innerHTML = "Pause";
-
     var body = document.getElementsByTagName("body")[0];
     body.appendChild(start_button);
     body.appendChild(pause_button);
-
+//Setting gameStartFlag 0, if the user click the play button it is assigned to 1
     var gameStartFlag=0;
     start_button.addEventListener ("click",function(){
       gameStartFlag=1;
@@ -45,10 +44,6 @@ var Engine = (function(global) {
    pause_button.addEventListener ("click",function(){
      gameStartFlag = 0;
    });
-
-
-
-
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -66,16 +61,11 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        /* var priyaCondition=1;
-         if (priyaCondition==1){
-         }*/
-
+        //My game starts only if the player click the play button
             if (gameStartFlag==1){
               update(dt);
+              render();
             }
-
-
-        render();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -130,6 +120,7 @@ var Engine = (function(global) {
         player.update();
         girl.update();
     }
+ /* This function is to show WIn and Lost message on canvas*/
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -137,11 +128,12 @@ var Engine = (function(global) {
      * they are flipbooks creating the illusion of animation but in reality
      * they are just drawing the entire screen over and over.
      */
+
     function render() {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
-         */
-        var rowImages = [
+           */
+              var rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
