@@ -28,6 +28,27 @@ var Engine = (function(global) {
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
+    // creating start and pause button for my game
+    var start_button = doc.createElement("button");
+    var pause_button = doc.createElement("button");
+    start_button.innerHTML = "Play";
+    pause_button.innerHTML = "Pause";
+
+    var body = document.getElementsByTagName("body")[0];
+    body.appendChild(start_button);
+    body.appendChild(pause_button);
+
+    var gameStartFlag=0;
+    start_button.addEventListener ("click",function(){
+      gameStartFlag=1;
+    });
+   pause_button.addEventListener ("click",function(){
+     gameStartFlag = 0;
+   });
+
+
+
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -45,7 +66,15 @@ var Engine = (function(global) {
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        update(dt);
+        /* var priyaCondition=1;
+         if (priyaCondition==1){
+         }*/
+
+            if (gameStartFlag==1){
+              update(dt);
+            }
+
+
         render();
 
         /* Set our lastTime variable which is used to determine the time delta
@@ -58,6 +87,7 @@ var Engine = (function(global) {
          */
         win.requestAnimationFrame(main);
     }
+
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -159,6 +189,7 @@ var Engine = (function(global) {
         });
         player.render();
         girl.render();
+
     }
 
     /* This function does nothing but it could have been a good place to
@@ -166,8 +197,9 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+
     }
+
 
   /*  function catchHearts(){
       allhearts.forEach(function(heart){
@@ -186,6 +218,7 @@ var Engine = (function(global) {
         'images/enemy-bug.png',
         'images/Heart.png',
         'images/char-princess-girl.png',
+        'images/play.png',
         'images/char-boy.png'
     ]);
     Resources.onReady(init);
