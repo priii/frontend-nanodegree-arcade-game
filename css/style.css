@@ -2,15 +2,22 @@ body {
     background-image: url('bg.jpg');
     text-align: center;
 }
-
+h1{
+  float:center;
+}
 button {
-  margin-top: 20px;
+  /*margin-top: 20px;*/
+  position:relative;
+  margin: 0 auto;
+  top :50%;
+  left:50%;
   line-height: 60px;
   font-weight: bold;
   padding: 0 60px;
   background: salmon;
   border: none;
   border-radius: 8px;
+  float: left;
 
 }
 button:hover {
@@ -18,7 +25,7 @@ button:hover {
 }
 
 .instruction{
-  float:left;
+  float:center;
   text-align: left;
   font-size: 25px;
   font-weight: bold;
