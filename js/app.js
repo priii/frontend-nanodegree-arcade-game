@@ -1,4 +1,5 @@
 // Enemies our player must avoid
+
 var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -115,13 +116,15 @@ Player.prototype.checkCollisions = function(){
     if( ( ( (ey2 < py1) && (ey2 > py2) ) || ( (ey1 < py1) && (ey1 > py2) ) ) &&
         ( ( ( ex2 > px1)&& (ex2 < px2) ) || ( (ex1 > px1) && (ex1 < px2) ) ) ){
        console.log("error")
-       confirm("you have got eaten by a bug! game over ! try again press ok to continue")
+       alert("you have got eaten by a bug! game over ! try again press ok to continue")
        this.x = 210;
        this.y = 470;
        player.resetHearts();
+
      }
    }
  };
+
 
 
 
@@ -210,18 +213,23 @@ if( ( ( (hy2 < py1) && (hy2 > py2) ) || ( (hy1 < py1) && (hy1 > py2) ) ) &&
 };
 
 Hearts.prototype.heartWin = function(){
- if ( ( (heart_1.x == 400) && (heart_1.y == 65) ) &&
-    ( (heart_2.x == 400) && (heart_2.y == 65) ) &&
-    ( (heart_3.x == 400) && (heart_3.y == 65) ) &&
-    ( (heart_4.x == 400) && (heart_4.y == 65) ) &&
-    ( (heart_5.x == 400) && (heart_5.y == 65) ) ) {
+  var heartFlag=1;//false
+
+  for(var i = 0 ; i < allhearts.length ; i++){
+       heartTrue=((allhearts[i].x == 400) && (allhearts[i].y == 65) );
+       heartFlag=heartTrue*heartFlag;
+  }
+ if (heartFlag==1) {
     console.log("won")
     girl.x = 290;
     girl.y = 400;
     player.x = 210;
     player.y = 470;
-  }
-};
+    alert("you won, press ok to continue")// i get an error before catching the last heart the game says i won continously i have to kill the page to restart the game
+    //location.reload();
+    }
+    };
+
 
 Hearts.prototype.resetHearts = function(){
   var heart_width = 48;
@@ -271,17 +279,11 @@ var allhearts = [heart_1,heart_2,heart_3,heart_4,heart_5];
 
 
 
-
-
-
-
-
-
-
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
+        13: 'enter',
         37: 'left',
         38: 'up',
         39: 'right',
