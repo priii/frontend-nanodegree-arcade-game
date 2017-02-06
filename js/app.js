@@ -49,14 +49,19 @@ var Player = function(x,y) {
     this.x= x;
     this.y= y;
     this.sprite = 'images/char-boy.png';
+    this.width = 102;
+    this.height = 75;
 
 };
 
 Player.prototype.update = function() {
+  if(winFlag==1){
+    this.lastUpdate();
+  }
    this.checkCollisions();
    this.catchHearts();
-   this.heartWin();
-
+   this.reachGirl(girl);
+   this.checkWin();
   };
 
 Player.prototype.render = function() {
@@ -93,6 +98,8 @@ Player.prototype.handleInput = function(keycode_val) {
 
   }
 };
+
+var collisionFlag=0;
 //Bug and player collision Function
 Player.prototype.checkCollisions = function(){
   // height and width are from the bug and char boy's image
@@ -100,51 +107,30 @@ Player.prototype.checkCollisions = function(){
   var enemy_height = 65;
   var player_width = 102;
   var player_height = 75;
+  var playerCenter = [this.x+this.width/2,this.y+this.height/2];
   for(var i = 0 ; i < allEnemies.length ; i++){
     var e = allEnemies[i];
-    var c = player_width*1/2; // for logical collision
-    var ey2 = e.y;
-    var ey1 = ey2 + enemy_height;
-    var py2 = this.y + c;
-    var py1 = py2 + player_height - c;
-    var ex1 = e.x;
-    var ex2 = ex1 + enemy_width;
-    var px1 = this.x + c;
-    var px2 = px1 + player_width - c;
+    var enemyCenter = [e.x+enemy_width/2,e.y+enemy_height/2];
+    intersectCondition = Math.max(Math.abs(playerCenter[0]-enemyCenter[0]),Math.abs(playerCenter[1]-enemyCenter[1]))<30;
     // keeping player's x,y axis and width and height  as a reference
     // checking  bug's y axis and bug image's height comes inbetween player's y axis and player's height and the same for width and x axis
-    if( ( ( (ey2 < py1) && (ey2 > py2) ) || ( (ey1 < py1) && (ey1 > py2) ) ) &&
-        ( ( ( ex2 > px1)&& (ex2 < px2) ) || ( (ex1 > px1) && (ex1 < px2) ) ) ){
-       console.log("error")
-       this.x = 210;
-       this.y = 470;
-       player.resetHearts();
-       alert("You have got eaten by a bug! Press Ok to Continue")
+    if(intersectCondition){
+      this.x = 210;
+      this.y = 470;
+      player.resetHearts();
+      alert("You have got eaten by a bug! Press Ok to Continue")
      }
    }
  };
+
 //Player collecting Hearts Function
  Player.prototype.catchHearts = function(){
-   /*for(var i = 0 ; i < allhearts.length ; i++){
-     allhearts[i].catchHearts();
-   }*/
-   var player_width = 102;
-   var player_height = 75;
-   var heart_width = 48;
-   var heart_height = 50;
+   var playerCenter = [this.x+this.width/2,this.y+this.height/2];
    for(var i = 0 ; i < allhearts.length ; i++){
    var h = allhearts[i];
-   //  var c = player_width/2; // for logical collision
-   var hy2 = h.y;
-   var hy1 = hy2 + heart_height;
-   var py2 = this.y ;
-   var py1 = py2 + player_height ;
-   var hx1 = h.x;
-   var hx2 = hx1 + heart_width;
-   var px1 = this.x ;
-   var px2 = px1 + player_width;
-   if( ( ( (hy2 < py1) && (hy2 > py2) ) || ( (hy1 < py1) && (hy1 > py2) ) ) &&
-       ( ( ( hx2 > px1)&& (hx2 < px2) ) || ( (hx1 > px1) && (hx1 < px2) ) ) ){
+   var heartCenter = [h.x+h.heart_width/2,h.y+h.heart_height/2];
+   intersectCondition = Math.max(Math.abs(playerCenter[0]-heartCenter[0]),Math.abs(playerCenter[1]-heartCenter[1]))<50;
+   if(intersectCondition){
          h.x = 400;
          h.y = 65;
        }
@@ -162,24 +148,47 @@ Player.prototype.checkCollisions = function(){
     h.y = rany_heart;
   }
  };
+
 // If the playyer collected all the hearts
- Player.prototype.heartWin = function(){
-    var heartFlag = 1;//Setting my heartFlag as 1
-    for(var i = 0 ; i < allhearts.length ; i++){
-         heartTrue=((allhearts[i].x == 400) && (allhearts[i].y == 65) );
-         heartFlag=heartTrue*heartFlag; // to check all the hearts are in the same position or not
-    }
-   if (heartFlag==1) {
-      console.log("won")
-      girl.x = 290;
-      girl.y = 400;
-      this.x = 210;
-      this.y = 470;
-      confirm(" You Have won the girl ! Click play to Play again")
-      // i get an error before catching the last heart the game says i won continously i have to kill the page to restart the game
-      location.reload();
-      }
- };
+Player.prototype.heartWin = function(){
+   var heartFlag = 1;//Setting my heartFlag as 1
+   for(var i = 0 ; i < allhearts.length ; i++){
+        heartTrue=((allhearts[i].x == 400) && (allhearts[i].y == 65) );
+        heartFlag=heartTrue*heartFlag; // to check all the hearts are in the same position or not
+   }
+   return heartFlag;
+};
+
+// if player reaches girl
+var reachGirlFlag=0;
+ Player.prototype.reachGirl = function(girl){
+   var playerCenter = [this.x+this.width/2,this.y+this.height/2];
+   var girlCenter = [girl.x+girl.width/2,girl.y+girl.height/2];
+   intersectCondition = Math.max(Math.abs(playerCenter[0]-girlCenter[0]),Math.abs(playerCenter[1]-girlCenter[1]))<30;
+   if(intersectCondition){
+     reachGirlFlag=1;
+   }
+ }
+
+var winFlag=0;
+Player.prototype.checkWin = function(){
+  heartFlag=this.heartWin();
+  if ( (heartFlag==1) && (reachGirlFlag==1) ) {
+     winFlag=1;
+
+     }
+}
+
+Player.prototype.lastUpdate = function(){
+  /*girl.x = 290;
+  girl.y = 400;
+  this.x = 210;
+  this.y = 470;*/
+
+  // i get an error before catching the last heart the game says i won continously i have to kill the page to restart the game
+  location.reload();
+  confirm(" Congratulations ! You helped the lonely boy to find his love .! Click play to Play again")
+}
 
 var player = new Player(210,470);
 
@@ -189,6 +198,8 @@ var Girl = function(x,y){
   this.x = x;
   this.y = y;
   this.sprite = 'images/char-princess-girl.png';
+  this.height=92;
+  this.width=82;
 };
 
 Girl.prototype.update = function(dt){};
@@ -207,7 +218,6 @@ var Hearts = function(x,y){
   this.sprite = 'images/Heart.png';
   this.heart_width = 48;
   this.heart_height = 50;
-  var win_flag = 0;
   };
 
 Hearts.prototype.update = function(){};
