@@ -1,6 +1,12 @@
-frontend-nanodegree-arcade-game
-===============================
+# Classic Arcade Game-Frogger
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+## Game Story
+ It's a simple **Arcade game** . It's all about a lonely boy finding his true love. The lonely Boy (the Player)  should **collect all the hearts to find his girl!** Collecting the hearts is not sufficient though, after collecting the hearts the lonely boy should have the courage to **meet her in person.** Collecting the hearts  is not that easy they  are protected by some nasty bugs. So the lonely boy should be smart enough to collect the hearts and escape from the bugs and should meet the girl to win the game.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## How To Play
+It's very Simple!. Use your ** UP, DOWN,LEFT,RIGHT** keys to move the player. If you want to **Play the Game again!** You Can simply **Reload the Page!** For those who completed the game successfully a new game starts automatically.
+
+## Starting up the Game
+Go to this link [NandoDegree-arcade-Game-Clone](
+https://github.com/priii/frontend-nanodegree-arcade-game).
+You can clone my repository or you can download the zip file in your local computer. just run the index file in **Google Chrome**. You areall set to Play the Game.
