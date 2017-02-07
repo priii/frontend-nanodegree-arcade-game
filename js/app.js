@@ -5,6 +5,8 @@ var Enemy = function(x, y, speed) {
     // a helper we've provided to easily load images
     this.x = x;
     this.y = y;
+    this.width = 101;
+    this.height = 65;
     this.speed = speed; // bugs should move randomly so passing the speed value as well
     this.sprite = 'images/enemy-bug.png';
 };
@@ -52,6 +54,7 @@ var Player = function(x, y) {
 Player.prototype.update = function() {
     if (winFlag == 1) { // if the flag is 1 it shows the confirm dialog box
         this.lastUpdate();
+
     }
     this.checkCollisions();
     this.catchHearts();
@@ -91,47 +94,46 @@ Player.prototype.handleInput = function(keycode_val) {
 
     }
 };
-//Bug and player collision Function
-Player.prototype.checkCollisions = function() {
-    // height and width are from the bug's image
-    var enemy_width = 101;
-    var enemy_height = 65;
-    //  Finding the center of the player's image
+// passing object as an array . the object can be a single value or more eg:there are more enemy but one girl
+Player.prototype.CheckIntersection = function(obstacle_array) {
+    //  Finding the center of the player's and obstacles image
     var playerCenter_x = this.x + this.width / 2;
     var playerCenter_y = this.y + this.height / 2;
-    for (var i = 0; i < allEnemies.length; i++) {
-        var e = allEnemies[i];
-        var enemyCenter_x = e.x + enemy_width / 2;
-        var enemyCenter_y = e.y + enemy_height / 2;
-        //Checking the x distance and y distance  between enemy and the player & abs is for to neglect the negative value
-        var x_distancebetweenPlayerandEnemy = Math.abs(playerCenter_x - enemyCenter_x);
-        var y_distancebetweenPlayerandEnemy = Math.abs(playerCenter_y - enemyCenter_y);
+    for (var i = 0; i < obstacle_array.length; i++) {
+        var o = obstacle_array[i];
+        var obstacle_Center_x = o.x + o.width / 2;
+        var obstacle_Center_y = o.y + o.height / 2;
+        //Checking the x distance and y distance between enemy and the player & abs is for to neglect the negative value
+        var x_distancebetweenPlayerandObstacle = Math.abs(playerCenter_x - obstacle_Center_x);
+        var y_distancebetweenPlayerandObstacle = Math.abs(playerCenter_y - obstacle_Center_y);
         //intersectCondition = (x_distancebetweenPlayerandEnemy<30 && y_distancebetweenPlayerandEnemy < 30)
         //finding the max of width and height and checking the output with <30 condition.30 is just an orbtirary value.
-        var intersectCondition = Math.max(x_distancebetweenPlayerandEnemy, y_distancebetweenPlayerandEnemy) < 30;
+        var intersectCondition = Math.max(x_distancebetweenPlayerandObstacle, y_distancebetweenPlayerandObstacle) < 50;
+        return intersectCondition;
+    }
+};
+//Bug and player collision Function
+Player.prototype.checkCollisions = function() {
+    for (var i = 0; i < allEnemies.length; i++) {
+        var e = allEnemies[i];
+        var intersectCondition = this.CheckIntersection([e]); // calling CheckIntersection function and passing enemy as objectarray
         if (intersectCondition) {
-            this.x = 210;
+            this.x = 210; //player starting position
             this.y = 470;
-            player.resetHearts();
+            this.resetHearts();
             alert("You have got eaten by a bug! Press Ok to Continue");
         }
     }
 };
 
-//Player collecting Hearts Function . Same bug collision logic
+//Player collecting Hearts Function . calling CheckIntersection function
 Player.prototype.catchHearts = function() {
-    var playerCenter_x = this.x + this.width / 2;
-    var playerCenter_y = this.y + this.height / 2;
     for (var i = 0; i < allhearts.length; i++) {
         var h = allhearts[i];
-        var heartCenter_x = h.x + h.heart_width / 2;
-        var heartCenter_y = h.y + h.heart_height / 2;
-        var x_distancebetweenPlayerandHeart = Math.abs(playerCenter_x - heartCenter_x);
-        var y_distancebetweenPlayerandHeart = Math.abs(playerCenter_y - heartCenter_y);
-        var intersectCondition = Math.max(x_distancebetweenPlayerandHeart, y_distancebetweenPlayerandHeart) < 50;
+        var intersectCondition = this.CheckIntersection([h]);
         if (intersectCondition) {
-            h.x = 400;
-            h.y = 65;
+            h.x = h.endx;
+            h.y = h.endy;
         }
     }
 };
@@ -152,7 +154,8 @@ Player.prototype.resetHearts = function() {
 Player.prototype.heartWin = function() {
     var heartFlag = 1; //Setting my heartFlag as 1
     for (var i = 0; i < allhearts.length; i++) {
-        heartTrue = ((allhearts[i].x == 400) && (allhearts[i].y == 65));
+        var h = allhearts[i];
+        heartTrue = ((allhearts[i].x == h.endx) && (allhearts[i].y == h.endy));
         heartFlag = heartTrue * heartFlag; // to check all the hearts are in the same (x,y)position or not
     }
     return heartFlag; // returns either 0 or 1 (if its 1 he collected all the hearts)
@@ -161,13 +164,7 @@ Player.prototype.heartWin = function() {
 // if player reaches girl
 var reachGirlFlag = 0;
 Player.prototype.reachGirl = function(girl) {
-    var playerCenter_x = this.x + this.width / 2;
-    var playerCenter_y = this.y + this.height / 2;
-    var girlCenter_x = girl.x + girl.width / 2;
-    var girlCenter_y = girl.y + girl.height / 2;
-    var x_distancebetweenPlayerandGirl = Math.abs(playerCenter_x - girlCenter_x);
-    var y_distancebetweenPlayerandGirl = Math.abs(playerCenter_y - girlCenter_y);
-    var intersectCondition = Math.max(x_distancebetweenPlayerandGirl, y_distancebetweenPlayerandGirl) < 30;
+    var intersectCondition = this.CheckIntersection([girl]);
     if (intersectCondition) {
         reachGirlFlag = 1; // setting the value as 1 if the player reaches the girl
     }
@@ -187,6 +184,7 @@ Player.prototype.checkWin = function() {
 Player.prototype.lastUpdate = function() {
     location.reload();
     confirm(" Congratulations ! You helped the lonely boy to find his love .! Click play to Play again");
+
 };
 // Player Object
 var player = new Player(210, 470);
@@ -216,8 +214,10 @@ var Hearts = function(x, y) {
     this.x = x;
     this.y = y;
     this.sprite = 'images/Heart.png';
-    this.heart_width = 48;
-    this.heart_height = 50;
+    this.width = 48;
+    this.height = 50;
+    this.endx = 400;
+    this.endy = 65;
 };
 
 Hearts.prototype.update = function() {};
