@@ -20,10 +20,10 @@ Enemy.prototype.update = function(dt) {
     var bug_speed;
     if (this.x > 505) {
         this.x = -101;
-         bug_speed = ((Math.random() * 100 + 50)); //after exceeding the canvas setting a diff speed for the bug.
+        bug_speed = ((Math.random() * 100 + 50)); //after exceeding the canvas setting a diff speed for the bug.
         this.x = this.x + bug_speed * dt;
     } else {
-         bug_speed = ((Math.random() * 400 + this.speed)); // creating random speed using Math.random method
+        bug_speed = ((Math.random() * 400 + this.speed)); // creating random speed using Math.random method
         this.x = this.x + bug_speed * dt;
     }
 };
@@ -36,6 +36,7 @@ var enemy_1 = new Enemy(20, 140, 50);
 var enemy_2 = new Enemy(100, 300, 150);
 var enemy_3 = new Enemy(80, 220, 100);
 var allEnemies = [enemy_1, enemy_2, enemy_3];
+
 //Player Class
 var Player = function(x, y) {
     this.x = x;
@@ -44,13 +45,15 @@ var Player = function(x, y) {
     this.width = 102;
     this.height = 75;
 };
+
 //Player Update function
 Player.prototype.update = function() {
-    if (winFlag == 1) {
+    if (winFlag == 1) { // if the flag is 1 it shows the confirm dialog box
         this.lastUpdate();
     }
     this.checkCollisions();
     this.catchHearts();
+    reachGirlFlag = 0; //  if player touch the girl before taking the hearts reachGirlFlag will be 1. so assigning it to 0
     this.reachGirl(girl);
     this.checkWin();
 };
@@ -91,12 +94,19 @@ Player.prototype.checkCollisions = function() {
     // height and width are from the bug's image
     var enemy_width = 101;
     var enemy_height = 65;
-    // Finding the player center position
-    var playerCenter = [this.x + this.width / 2, this.y + this.height / 2];
+    //  Finding the center of the player's image
+    var playerCenter_x = this.x + this.width / 2;
+    var playerCenter_y = this.y + this.height / 2;
     for (var i = 0; i < allEnemies.length; i++) {
         var e = allEnemies[i];
-        var enemyCenter = [e.x + enemy_width / 2, e.y + enemy_height / 2];
-        intersectCondition = Math.max(Math.abs(playerCenter[0] - enemyCenter[0]), Math.abs(playerCenter[1] - enemyCenter[1])) < 30;
+        var enemyCenter_x = e.x + enemy_width / 2;
+        var enemyCenter_y = e.y + enemy_height / 2;
+        //Checking the x distance and y distance  between enemy and the player & abs is for to neglect the negative value
+        x_distancebetweenPlayerandEnemy = Math.abs(playerCenter_x - enemyCenter_x);
+        y_distancebetweenPlayerandEnemy = Math.abs(playerCenter_y - enemyCenter_y);
+        //intersectCondition = (x_distancebetweenPlayerandEnemy<30 && y_distancebetweenPlayerandEnemy < 30)
+        //finding the max of width and height and checking the output with <30 condition.30 is just an orbtirary value.
+        var intersectCondition = Math.max(x_distancebetweenPlayerandEnemy, y_distancebetweenPlayerandEnemy) < 30;
         if (intersectCondition) {
             this.x = 210;
             this.y = 470;
@@ -106,13 +116,17 @@ Player.prototype.checkCollisions = function() {
     }
 };
 
-//Player collecting Hearts Function
+//Player collecting Hearts Function . Same bug collision logic
 Player.prototype.catchHearts = function() {
-    var playerCenter = [this.x + this.width / 2, this.y + this.height / 2];
+    var playerCenter_x = this.x + this.width / 2;
+    var playerCenter_y = this.y + this.height / 2;
     for (var i = 0; i < allhearts.length; i++) {
         var h = allhearts[i];
-        var heartCenter = [h.x + h.heart_width / 2, h.y + h.heart_height / 2];
-        intersectCondition = Math.max(Math.abs(playerCenter[0] - heartCenter[0]), Math.abs(playerCenter[1] - heartCenter[1])) < 50;
+        var heartCenter_x = h.x + h.heart_width / 2;
+        var heartCenter_y = h.y + h.heart_height / 2;
+        x_distancebetweenPlayerandHeart = Math.abs(playerCenter_x - heartCenter_x);
+        y_distancebetweenPlayerandHeart = Math.abs(playerCenter_y - heartCenter_y);
+        var intersectCondition = Math.max(x_distancebetweenPlayerandHeart, y_distancebetweenPlayerandHeart) < 50;
         if (intersectCondition) {
             h.x = 400;
             h.y = 65;
@@ -137,25 +151,31 @@ Player.prototype.heartWin = function() {
     var heartFlag = 1; //Setting my heartFlag as 1
     for (var i = 0; i < allhearts.length; i++) {
         heartTrue = ((allhearts[i].x == 400) && (allhearts[i].y == 65));
-        heartFlag = heartTrue * heartFlag; // to check all the hearts are in the same position or not
+        heartFlag = heartTrue * heartFlag; // to check all the hearts are in the same (x,y)position or not
     }
-    return heartFlag;
+    return heartFlag; // returns either 0 or 1 (if its 1 he collected all the hearts)
 };
 
 // if player reaches girl
 var reachGirlFlag = 0;
 Player.prototype.reachGirl = function(girl) {
-    var playerCenter = [this.x + this.width / 2, this.y + this.height / 2];
-    var girlCenter = [girl.x + girl.width / 2, girl.y + girl.height / 2];
-    intersectCondition = Math.max(Math.abs(playerCenter[0] - girlCenter[0]), Math.abs(playerCenter[1] - girlCenter[1])) < 30;
+    var playerCenter_x = this.x + this.width / 2;
+    var playerCenter_y = this.y + this.height / 2;
+    var girlCenter_x = girl.x + girl.width / 2;
+    var girlCenter_y = girl.y + girl.height / 2;
+    var x_distancebetweenPlayerandGirl = Math.abs(playerCenter_x - girlCenter_x);
+    var y_distancebetweenPlayerandGirl = Math.abs(playerCenter_y - girlCenter_y);
+    var intersectCondition = Math.max(x_distancebetweenPlayerandGirl, y_distancebetweenPlayerandGirl) < 30;
     if (intersectCondition) {
-        reachGirlFlag = 1;
+        reachGirlFlag = 1; // setting the value as 1 if the player reaches the girl
     }
 };
 //Function to check whether the player won or not
 var winFlag = 0;
 Player.prototype.checkWin = function() {
-    heartFlag = this.heartWin();
+    heartFlag = this.heartWin(); // storing the return value of heartwin function
+    console.log(heartFlag, reachGirlFlag);
+    // this condition checks whether he collected all the hearts and also he reached the Girl. and asigning the winFlag as 1
     if ((heartFlag == 1) && (reachGirlFlag == 1)) {
         winFlag = 1;
 
