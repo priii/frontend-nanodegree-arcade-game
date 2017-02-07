@@ -31,6 +31,8 @@ Enemy.prototype.update = function(dt) {
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+// Enemy Objects
 //passing speed aswell so that each bug move at different speed
 var enemy_1 = new Enemy(20, 140, 50);
 var enemy_2 = new Enemy(100, 300, 150);
@@ -206,6 +208,7 @@ Girl.prototype.render = function() {
 
 };
 
+// Girl object
 var girl = new Girl(400, 45);
 
 // heart class(rule book)
