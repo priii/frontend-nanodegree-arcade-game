@@ -102,8 +102,8 @@ Player.prototype.checkCollisions = function() {
         var enemyCenter_x = e.x + enemy_width / 2;
         var enemyCenter_y = e.y + enemy_height / 2;
         //Checking the x distance and y distance  between enemy and the player & abs is for to neglect the negative value
-        x_distancebetweenPlayerandEnemy = Math.abs(playerCenter_x - enemyCenter_x);
-        y_distancebetweenPlayerandEnemy = Math.abs(playerCenter_y - enemyCenter_y);
+        var x_distancebetweenPlayerandEnemy = Math.abs(playerCenter_x - enemyCenter_x);
+        var y_distancebetweenPlayerandEnemy = Math.abs(playerCenter_y - enemyCenter_y);
         //intersectCondition = (x_distancebetweenPlayerandEnemy<30 && y_distancebetweenPlayerandEnemy < 30)
         //finding the max of width and height and checking the output with <30 condition.30 is just an orbtirary value.
         var intersectCondition = Math.max(x_distancebetweenPlayerandEnemy, y_distancebetweenPlayerandEnemy) < 30;
@@ -124,8 +124,8 @@ Player.prototype.catchHearts = function() {
         var h = allhearts[i];
         var heartCenter_x = h.x + h.heart_width / 2;
         var heartCenter_y = h.y + h.heart_height / 2;
-        x_distancebetweenPlayerandHeart = Math.abs(playerCenter_x - heartCenter_x);
-        y_distancebetweenPlayerandHeart = Math.abs(playerCenter_y - heartCenter_y);
+        var x_distancebetweenPlayerandHeart = Math.abs(playerCenter_x - heartCenter_x);
+        var y_distancebetweenPlayerandHeart = Math.abs(playerCenter_y - heartCenter_y);
         var intersectCondition = Math.max(x_distancebetweenPlayerandHeart, y_distancebetweenPlayerandHeart) < 50;
         if (intersectCondition) {
             h.x = 400;
@@ -173,7 +173,7 @@ Player.prototype.reachGirl = function(girl) {
 //Function to check whether the player won or not
 var winFlag = 0;
 Player.prototype.checkWin = function() {
-    heartFlag = this.heartWin(); // storing the return value of heartwin function
+    var heartFlag = this.heartWin(); // storing the return value of heartwin function
     console.log(heartFlag, reachGirlFlag);
     // this condition checks whether he collected all the hearts and also he reached the Girl. and asigning the winFlag as 1
     if ((heartFlag == 1) && (reachGirlFlag == 1)) {
