@@ -7,6 +7,6 @@
 It's very Simple!. Use your **UP, DOWN,LEFT,RIGHT** keys to move the player. If you want to **Play the Game again!** You Can simply **Reload the Page!** For those who completed the game successfully a new game starts automatically.
 
 ## Starting up the Game
-Go to this link [NandoDegree-arcade-Game-Clone](
+Go to this link [Arcade-Game-Clone](
 https://github.com/priii/frontend-nanodegree-arcade-game).
-You can clone my repository or you can download the zip file in your local computer. just run the index file in **Google Chrome**. You areall set to Play the Game.
+You can clone my repository or you can download the zip file in your local computer. just run the index file in **Google Chrome**. You are all set to Play the Game.
